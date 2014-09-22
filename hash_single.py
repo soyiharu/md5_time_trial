@@ -4,6 +4,7 @@
 import time
 import hashlib
 import sys
+from itertools import product
 
 def main():
     argv = sys.argv[1:]
@@ -14,8 +15,9 @@ def main():
     hash = argv[1]
     
     start = time.time()
-    for i in range(1000000):
-        pw = "{0}${1:06d}".format(salt, i).encode("utf-8")
+    pw = bytearray("{0}${1:06d}".format(salt, 0).encode("utf-8"))
+    for i, value in enumerate(product(b'0123456789', repeat=6)):
+        pw[-6:] = value
         tmp = hashlib.md5(pw).hexdigest()
         if hash == tmp:
             print("match[{0:06d}]".format(i))
